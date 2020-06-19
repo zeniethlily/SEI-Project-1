@@ -16,6 +16,43 @@ var playerPos = (canvas.width - playerWidth) / 2;
 var leftKey = false;
 var rightKey = false;
 
+var block = {
+    rows: 3,        //can change this object to make it harder
+    columns: 8,
+    width: 75,
+    height: 20,
+    padding: 10,
+    offsetTop: 30,
+    offsetLeft: 30
+}
+
+var blocks = [];
+for(let yY = 0; yY < block.columns; yY++){
+    blocks[yY] = [];
+    for(let xX = 0; xX < block.rows; xX++){
+        blocks[yY][xX] = { x: 0, y: 0 }; //initialize each block array as an object
+    }
+}
+
+document.addEventListener("keydown", keyDownHandler, false);
+document.addEventListener("keyup", keyUpHandler, false);
+
+function drawBlocks(){
+    for(let yY = 0; yY < block.columns; yY++){
+        for(let xX = 0; xX < block.rows; xX++){
+            var blockX = (yY * (block.width + block.padding)) + block.offsetLeft;
+            var blockY = (xX * (block.height + block.padding)) + block.offsetTop;
+            blocks[yY][xX].x = blockX;
+            blocks[yY][xX].y = blockY;
+            bContext.beginPath();
+            bContext.rect(blockX, blockY, block.width, block.height);
+            bContext.fillStyle = "#000000";
+            bContext.fill();
+            bContext.closePath();
+        }
+    }
+}
+
 function drawPlayer(){
     bContext.beginPath();
     bContext.rect(playerPos, canvas.height - playerHeight, playerWidth, playerHeight);
@@ -34,6 +71,7 @@ function drawBall(){
 
 function draw(){  //draw code here
     bContext.clearRect(0, 0, canvas.width, canvas.height); //clear frame before drawing
+    drawBlocks(); //draws blocks
     drawBall(); //draws ball
     drawPlayer(); //draws player
 //--------------------ball collision detection---------------------------
@@ -68,11 +106,6 @@ function draw(){  //draw code here
     x += dx;    //moves the ball
     y += dy;
 }
-
-
-
-document.addEventListener("keydown", keyDownHandler, false);
-document.addEventListener("keyup", keyUpHandler, false);
 
 function keyUpHandler(e){
     if(e.key == "ArrowRight"){
