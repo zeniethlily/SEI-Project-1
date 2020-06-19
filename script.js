@@ -40,9 +40,17 @@ function draw(){  //draw code here
     if(x + dx > canvas.width - ballRadius || x + dx < ballRadius){
         dx = -dx; //if ball touches left or right "bounce" it by inverting the movement rate
     }
-
-    if(y + dy > canvas.height - ballRadius || y + dy < ballRadius){
-        dy = -dy; //if ball touches top or bottom "bounce" it by inverting the movement rate
+    if(y + dy < ballRadius){
+        dy = -dy; //collision detection with top of the box.
+    } else if(y + dy > canvas.height - ballRadius){
+        if(x > playerPos && x < playerPos + playerWidth){ //collision detection with player bar
+            dy = -dy;
+        } else {
+            //game end state because ball touches bottom bar. can add lives here.
+            console.log("end state triggered");
+            document.location.reload();
+            clearInterval(interval);
+        }
     }
 //--------------------player movement------------------------------------
     if(leftKey && playerPos > 0){ //collision detection for player otherwise it keeps clipping into box
@@ -61,7 +69,7 @@ function draw(){  //draw code here
     y += dy;
 }
 
-setInterval(draw, 10); //execute draw, refreshes
+
 
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
@@ -81,3 +89,5 @@ function keyDownHandler(e){
         leftKey = true;
     }
 }
+
+var interval = setInterval(draw, 10); //execute draw, refreshes
