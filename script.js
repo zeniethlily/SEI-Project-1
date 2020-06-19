@@ -45,12 +45,12 @@ function draw(){  //draw code here
         dy = -dy; //if ball touches top or bottom "bounce" it by inverting the movement rate
     }
 //--------------------player movement------------------------------------
-    if(leftKey){
+    if(leftKey && playerPos > 0){ //collision detection for player otherwise it keeps clipping into box
         playerPos -= 7; //player movement speed left
         if (playerPos < 0){
             player = 0;
         }
-    } else if(rightKey && playerPos < canvas.width - playerWidth){ //collision detection for player otherwise it keeps clipping into box
+    } else if(rightKey && playerPos < canvas.width - playerWidth){ 
         playerPos +=7;  //player movement speed right
         if (playerPos + playerWidth > canvas.width){
             playerPos = canvas.width - playerWidth;
