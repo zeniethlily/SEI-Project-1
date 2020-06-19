@@ -46,12 +46,12 @@ function draw(){  //draw code here
     }
 //--------------------player movement------------------------------------
     if(leftKey){
-        playerPos -= 7;
+        playerPos -= 7; //player movement speed left
         if (playerPos < 0){
             player = 0;
         }
-    } else if(rightKey){
-        playerPos +=7;
+    } else if(rightKey && playerPos < canvas.width - playerWidth){ //collision detection for player otherwise it keeps clipping into box
+        playerPos +=7;  //player movement speed right
         if (playerPos + playerWidth > canvas.width){
             playerPos = canvas.width - playerWidth;
         }
