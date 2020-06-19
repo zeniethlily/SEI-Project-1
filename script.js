@@ -35,6 +35,7 @@ function drawBall(){
 function draw(){  //draw code here
     bContext.clearRect(0, 0, canvas.width, canvas.height); //clear frame before drawing
     drawBall(); //draws ball
+    drawPlayer(); //draws player
 //--------------------ball collision detection---------------------------
     if(x + dx > canvas.width - ballRadius || x + dx < ballRadius){
         dx = -dx; //if ball touches left or right "bounce" it by inverting the movement rate
@@ -43,7 +44,18 @@ function draw(){  //draw code here
     if(y + dy > canvas.height - ballRadius || y + dy < ballRadius){
         dy = -dy; //if ball touches top or bottom "bounce" it by inverting the movement rate
     }
-
+//--------------------player movement------------------------------------
+    if(leftKey){
+        playerPos -= 7;
+        if (playerPos < 0){
+            player = 0;
+        }
+    } else if(rightKey){
+        playerPos +=7;
+        if (playerPos + playerWidth > canvas.width){
+            playerPos = canvas.width - playerWidth;
+        }
+    }
 
     x += dx;    //moves the ball
     y += dy;
@@ -55,17 +67,17 @@ document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
 
 function keyUpHandler(e){
-    if(e.key == "Right" || e.key == "ArrowRight"){
+    if(e.key == "ArrowRight"){
         rightKey = false;
-    } else if (e.key == "Left" || e.key == "ArrowLeft"){
+    } else if (e.key == "ArrowLeft"){
         leftKey = false;
     }
 }
 
 function keyDownHandler(e){
-    if(e.key == "Right" || e.key == "ArrowRight"){
+    if(e.key == "ArrowRight"){
         rightKey = true;
-    } else if (e.key == "Left" || e.key == "ArrowLeft"){
+    } else if (e.key == "ArrowLeft"){
         leftKey = true;
     }
 }
