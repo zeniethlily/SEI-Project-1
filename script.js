@@ -9,10 +9,24 @@ var dy = -2;
 
 var ballRadius = 10;
 
+var playerHeight = 10;
+var playerWidth = 75;
+var playerPos = (canvas.width - playerWidth) / 2;
+
+var leftKey = false;
+var rightKey = false;
+
+function drawPlayer(){
+    bContext.beginPath();
+    bContext.rect(playerPos, canvas.height - playerHeight, playerWidth, playerHeight);
+    bContext.fillStyle = "#000000";
+    bContext.fill();
+    bContext.closePath();
+}
 
 function drawBall(){
     bContext.beginPath();
-    bContext.arc(x, y, ballRadius, 0, Math.PI*2, false); //draw circle first 2 are position on canvas
+    bContext.arc(x, y, ballRadius, 0, Math.PI*2); //draw circle first 2 are position on canvas
     bContext.fillStyle = "#000000"; //fill color for the above shape
     bContext.fill();
     bContext.closePath();
@@ -37,11 +51,21 @@ function draw(){  //draw code here
 
 setInterval(draw, 10); //execute draw, refreshes
 
+document.addEventListener("keydown", keyDownHandler, false);
+document.addEventListener("keyup", keyUpHandler, false);
 
+function keyUpHandler(e){
+    if(e.key == "Right" || e.key == "ArrowRight"){
+        rightKey = false;
+    } else if (e.key == "Left" || e.key == "ArrowLeft"){
+        leftKey = false;
+    }
+}
 
-
-// bContext.beginPath();
-// bContext.rect(20, 40, 50, 50);
-// bContext.fillStyle = "green";
-// bContext.fill();
-// bContext.closePath();
+function keyDownHandler(e){
+    if(e.key == "Right" || e.key == "ArrowRight"){
+        rightKey = true;
+    } else if (e.key == "Left" || e.key == "ArrowLeft"){
+        leftKey = true;
+    }
+}
