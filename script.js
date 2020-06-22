@@ -1,8 +1,8 @@
 var canvas = document.getElementById("breakoutCanvas");
 var bContext = canvas.getContext("2d");
 
-var x = canvas.width/2;  //starting point of x. center
-var y = canvas.height-30; //starting point of y. bottom of box
+var x = canvas.width/2;  //starting point of ball x. center
+var y = canvas.height-30; //starting point of ball y. bottom of box
 
 var dx = 2;  //movement rate per frame
 var dy = -2;
@@ -30,7 +30,7 @@ var blocks = [];
 for(let yY = 0; yY < block.columns; yY++){
     blocks[yY] = [];
     for(let xX = 0; xX < block.rows; xX++){
-        blocks[yY][xX] = { x: 0, y: 0 }; //initialize each block array as an object
+        blocks[yY][xX] = { x: 0, y: 0, state: 1}; //initialize each block array as an object
     }
 }
 
@@ -40,15 +40,17 @@ document.addEventListener("keyup", keyUpHandler, false);
 function drawBlocks(){
     for(let yY = 0; yY < block.columns; yY++){
         for(let xX = 0; xX < block.rows; xX++){
-            var blockX = (yY * (block.width + block.padding)) + block.offsetLeft;
-            var blockY = (xX * (block.height + block.padding)) + block.offsetTop;
-            blocks[yY][xX].x = blockX;
-            blocks[yY][xX].y = blockY;
-            bContext.beginPath();
-            bContext.rect(blockX, blockY, block.width, block.height);
-            bContext.fillStyle = "#000000";
-            bContext.fill();
-            bContext.closePath();
+            if(blocks[yY][xX].state == 1){
+                var blockX = (yY * (block.width + block.padding)) + block.offsetLeft;
+                var blockY = (xX * (block.height + block.padding)) + block.offsetTop;
+                blocks[yY][xX].x = blockX;
+                blocks[yY][xX].y = blockY;
+                bContext.beginPath();
+                bContext.rect(blockX, blockY, block.width, block.height);
+                bContext.fillStyle = "#000000";
+                bContext.fill();
+                bContext.closePath();
+            }
         }
     }
 }
@@ -69,12 +71,25 @@ function drawBall(){
     bContext.closePath();
 }
 
+function collisionDetection(){ //detection for blocks
+    for(let yY = 0; yY < block.columns; yY++){
+        for(let xX = 0; xX < block.rows; xX++){
+            var b = blocks[yY][xX]; //adding a reference to each of the existing blocks
+            if(x > b.x && x < b.x + block.width && y > b.y && y < b.y + block.height){
+                dy = -dy; //bounces the ball after collision.
+                b.state = 0; //set state of the block to 0 so it doesn't get drawn in next frame.
+            }
+        }
+    }
+}
+
 function draw(){  //draw code here
     bContext.clearRect(0, 0, canvas.width, canvas.height); //clear frame before drawing
     drawBlocks(); //draws blocks
     drawBall(); //draws ball
     drawPlayer(); //draws player
 //--------------------ball collision detection---------------------------
+    collisionDetection(); //for blocks
     if(x + dx > canvas.width - ballRadius || x + dx < ballRadius){
         dx = -dx; //if ball touches left or right "bounce" it by inverting the movement rate
     }
@@ -97,7 +112,7 @@ function draw(){  //draw code here
             player = 0;
         }
     } else if(rightKey && playerPos < canvas.width - playerWidth){ 
-        playerPos +=7;  //player movement speed right
+        playerPos += 7;  //player movement speed right
         if (playerPos + playerWidth > canvas.width){
             playerPos = canvas.width - playerWidth;
         }
