@@ -101,8 +101,8 @@ function collisionDetection(){ //detection for blocks
                 if(x > b.x && x < b.x + block.width && y > b.y && y < b.y + block.height){
                     dy = -dy; //bounces the ball after collision.
                     b.state = 0; //set state of the block to 0 so it doesn't get drawn in next frame.
-                    playerScore += 1;
-                    if(playerScore == block.rows * block.columns){
+                    playerScore += 12;
+                    if(playerScore == (block.rows * block.columns * 12)){
                         //gameover
                         alert("Win!");
                         document.location.reload();
