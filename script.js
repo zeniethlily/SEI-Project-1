@@ -81,6 +81,12 @@ function drawScore(){ //draws score on the canvas
     bContext.fillText(`Score: ${playerScore}`, 8, 20); //number behind x,y on canvas
 }
 
+function drawPower(){ //draws score on the canvas
+    bContext.font = "16px monospace";
+    bContext.fillStyle = "#000000";
+    bContext.fillText(`Score: ${playerScore}`, 8, 20); //number behind x,y on canvas
+}
+
 function drawLives(){
     bContext.font = "16px monospace";
     bContext.fillStyle = "#000000";
@@ -95,10 +101,11 @@ function collisionDetection(){ //detection for blocks
                 if(x > b.x && x < b.x + block.width && y > b.y && y < b.y + block.height){
                     dy = -dy; //bounces the ball after collision.
                     b.state = 0; //set state of the block to 0 so it doesn't get drawn in next frame.
-                    playerScore += 12;
+                    playerScore += 1;
                     if(playerScore == block.rows * block.columns){
                         //gameover
                         alert("Win!");
+                        document.location.reload();
                         clearInterval(interval);
                     }
                 }
