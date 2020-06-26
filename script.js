@@ -1,6 +1,9 @@
 var canvas = document.getElementById("breakoutCanvas");
 var bContext = canvas.getContext("2d");
 
+var randomColor = Math.floor(Math.random()*16777215).toString(16);
+var playerScore = 0;
+
 var x = canvas.width/2;  //starting point of ball x. center
 var y = canvas.height-30; //starting point of ball y. bottom of box
 
@@ -11,7 +14,7 @@ var ballRadius = 10;
 
 var playerHeight = 10;
 var playerWidth = 75;
-var playerPos = (canvas.width - playerWidth) / 2;
+var playerPos = (canvas.width - playerWidth) / 2; //X coordinate of player
 
 var leftKey = false;
 var rightKey = false;
@@ -47,7 +50,7 @@ function drawBlocks(){
                 blocks[yY][xX].y = blockY;
                 bContext.beginPath();
                 bContext.rect(blockX, blockY, block.width, block.height);
-                bContext.fillStyle = "#000000";
+                bContext.fillStyle = `#${randomColor}`;
                 bContext.fill();
                 bContext.closePath();
             }
@@ -66,19 +69,34 @@ function drawPlayer(){
 function drawBall(){
     bContext.beginPath();
     bContext.arc(x, y, ballRadius, 0, Math.PI*2); //draw circle first 2 are position on canvas
-    bContext.fillStyle = "#000000"; //fill color for the above shape
+    bContext.fillStyle = `#${randomColor}`; //fill color for the above shape
     bContext.fill();
     bContext.closePath();
+}
+
+function drawScore(){ //draws score on the canvas
+    bContext.font = "16px monospace";
+    bContext.fillStyle = "#000000";
+    bContext.fillText(`Score: ${playerScore}`, 8, 20); //number behind x,y on canvas
 }
 
 function collisionDetection(){ //detection for blocks
     for(let yY = 0; yY < block.columns; yY++){
         for(let xX = 0; xX < block.rows; xX++){
             var b = blocks[yY][xX]; //adding a reference to each of the existing blocks
-            if(x > b.x && x < b.x + block.width && y > b.y && y < b.y + block.height){
-                dy = -dy; //bounces the ball after collision.
-                b.state = 0; //set state of the block to 0 so it doesn't get drawn in next frame.
+            if (b.state == 1){ //check if the block exists
+                if(x > b.x && x < b.x + block.width && y > b.y && y < b.y + block.height){
+                    dy = -dy; //bounces the ball after collision.
+                    b.state = 0; //set state of the block to 0 so it doesn't get drawn in next frame.
+                    playerScore += 12;
+                    if(score == block.rows * block.columns){
+                        //gameover
+                        alert("Win!");
+                        clearInterval(interval);
+                    }
+                }
             }
+            
         }
     }
 }
@@ -88,6 +106,7 @@ function draw(){  //draw code here
     drawBlocks(); //draws blocks
     drawBall(); //draws ball
     drawPlayer(); //draws player
+    drawScore(); //draws score
 //--------------------ball collision detection---------------------------
     collisionDetection(); //for blocks
     if(x + dx > canvas.width - ballRadius || x + dx < ballRadius){
@@ -100,7 +119,7 @@ function draw(){  //draw code here
             dy = -dy;
         } else {
             //game end state because ball touches bottom bar. can add lives here.
-            console.log("end state triggered");
+            alert("game over");
             document.location.reload();
             clearInterval(interval);
         }
