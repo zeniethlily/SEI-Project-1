@@ -49,9 +49,11 @@ function effectRandomizer(){
     if(effect > 8){
         //activate superball
         isSuperBall = true;
+        powerUp = "Super Ball!"
     } else if(effect < 5){
         //deactivate superball
         isSuperBall = false;
+        powerUp = "";
     }
 }
 
