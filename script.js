@@ -44,6 +44,17 @@ for(let yY = 0; yY < block.columns; yY++){
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
 
+function effectRandomizer(){
+    let effect = Math.floor(Math.random() * 10); //for random effect
+    if(effect > 8){
+        //activate superball
+        isSuperBall = true;
+    } else if(effect < 5){
+        //deactivate superball
+        isSuperBall = false;
+    }
+}
+
 function drawBlocks(){
     for(let yY = 0; yY < block.columns; yY++){
         for(let xX = 0; xX < block.rows; xX++){
@@ -108,6 +119,7 @@ function collisionDetection(){ //detection for blocks
                     b.state = 0; //set state of the block to 0 so it doesn't get drawn in next frame.
                     playerScore += 12;
                     ballColorChanger();
+                    effectRandomizer();//testing random effects
                     if(playerScore == (block.rows * block.columns * 12)){
                         //gameover
                         alert("Win!");
