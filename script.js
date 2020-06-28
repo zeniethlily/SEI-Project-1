@@ -185,7 +185,7 @@ function draw(){  //draw code here
 
     if(isPaddleUp){ //keep increasing player width until target reached
         if(playerWidth < playerUpWidth){
-            playerWidth += 1;
+            playerWidth ++;
         }
     } else {
         if(playerWidth != 75){
@@ -241,6 +241,19 @@ function draw(){  //draw code here
     }
 }
 
+function pauseScreen(){
+    ctx.font = "30px Verdana";
+    // Create gradient
+    var gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
+    gradient.addColorStop("0"," magenta");
+    gradient.addColorStop("0.5", "blue");
+    gradient.addColorStop("1.0", "red");
+    // Fill with gradient
+    ctx.fillStyle = gradient;
+    ctx.fillText("Game Paused", (canvas.width / 2) - 90, canvas.height / 2);
+}
+
+
 function keyUpHandler(e){
     if(e.key == "ArrowRight"){
         rightKey = false;
@@ -260,6 +273,7 @@ function keyDownHandler(e){
 var interval;
 function pauseGame(){
     if(!gamePaused){
+        pauseScreen();
         clearTimeout(interval)
         gamePaused = true;
     } else if(gamePaused){
