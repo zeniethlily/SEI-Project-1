@@ -1,6 +1,7 @@
 var canvas = document.getElementById("breakoutCanvas");
 var ctx = canvas.getContext("2d");
 
+var gamePaused = true;
 var randomColor = Math.floor(Math.random()*16777215).toString(16);
 var ballRandomColor = Math.floor(Math.random()*16777215).toString(16); // this one runs only once.
 var playerScore = 0;
@@ -49,11 +50,13 @@ document.addEventListener("keyup", keyUpHandler, false);
 
 function effectRandomizer(){
     let effect = Math.floor(Math.random() * 10); //for random effect
-    if(effect > 5){
+    if(effect > 3 && effect < 7){
         //activate superball
-        //superBall();
+        superBall();
+    }
+    if(effect >= 7 && effect < 10){
         paddleUp();
-    } 
+    }
     
 }
 var paddleTimer;
@@ -173,6 +176,7 @@ function collisionDetection(){ //detection for blocks
 }
 
 function draw(){  //draw code here
+    if(!gamePaused){
     ctx.clearRect(0, 0, canvas.width, canvas.height); //clear frame before drawing
     drawBlocks(); //draws blocks
 
@@ -234,22 +238,34 @@ function draw(){  //draw code here
 
     x += dx;    //moves the ball
     y += dy;
+    }
 }
 
 function keyUpHandler(e){
     if(e.key == "ArrowRight"){
         rightKey = false;
-    } else if (e.key == "ArrowLeft"){
+    } else if(e.key == "ArrowLeft"){
         leftKey = false;
     }
 }
 
 function keyDownHandler(e){
+    if(e.key == "p") pauseGame();
     if(e.key == "ArrowRight"){
         rightKey = true;
-    } else if (e.key == "ArrowLeft"){
+    } else if(e.key == "ArrowLeft"){
         leftKey = true;
     }
 }
 
-var interval = setInterval(draw, 10); //execute draw, refreshes
+function pauseGame(){
+    if(!gamePaused){
+        clearTimeout(interval)
+        gamePaused = true;
+    } else if(gamePaused){
+        interval = setInterval(draw, 10);
+        gamePaused = false;
+    }
+    
+}
+//var interval = setInterval(draw, 10); //execute draw, refreshes
