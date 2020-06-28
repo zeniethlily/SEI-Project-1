@@ -24,7 +24,7 @@ var leftKey = false;
 var rightKey = false;
 
 var block = {
-    rows: 3,        //can change this object to make it harder
+    rows: 5,        //can change this object to make it harder
     columns: 8,
     width: 75,
     height: 20,
@@ -46,14 +46,28 @@ document.addEventListener("keyup", keyUpHandler, false);
 
 function effectRandomizer(){
     let effect = Math.floor(Math.random() * 10); //for random effect
-    if(effect > 8){
+    if(effect > 5){
         //activate superball
-        isSuperBall = true;
-        powerUp = "Super Ball!"
+        superBall();
     } else if(effect < 5){
         //deactivate superball
-        isSuperBall = false;
-        powerUp = "";
+    }
+}
+
+function superBall(){
+    if(!isSuperBall){
+        isSuperBall = true;
+        powerUp = "Super Ball!";
+        setTimeout(resetSuper=>{
+            isSuperBall = false;
+            powerUp = "";
+        },7000);
+    } else {
+        clearTimeout();
+        setTimeout(resetSuper=>{
+            isSuperBall = false;
+            powerUp = "";
+        },7000);
     }
 }
 
@@ -117,7 +131,9 @@ function collisionDetection(){ //detection for blocks
             var b = blocks[yY][xX]; //adding a reference to each of the existing blocks
             if (b.state == 1){ //check if the block exists
                 if(x > b.x && x < b.x + block.width && y > b.y && y < b.y + block.height){
-                    dy = -dy; //bounces the ball after collision.
+                    if(!isSuperBall){
+                        dy = -dy; //bounces the ball after collision.
+                    }
                     b.state = 0; //set state of the block to 0 so it doesn't get drawn in next frame.
                     playerScore += 12;
                     ballColorChanger();
