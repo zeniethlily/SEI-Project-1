@@ -257,7 +257,7 @@ function keyDownHandler(e){
         leftKey = true;
     }
 }
-
+var interval;
 function pauseGame(){
     if(!gamePaused){
         clearTimeout(interval)
