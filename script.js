@@ -12,12 +12,15 @@ var y = canvas.height-30; //starting point of ball y. bottom of box
 
 var dx = 2;  //movement rate per frame
 var dy = -2;
-
+//----------player power states------
 var isSuperBall = false;
+var isPaddleUp = false;
+
 var ballRadius = 10;
 
 var playerHeight = 10;
 var playerWidth = 75;
+var playerUpWidth = 150;
 var playerPos = (canvas.width - playerWidth) / 2; //X coordinate of player
 
 var leftKey = false;
@@ -48,23 +51,41 @@ function effectRandomizer(){
     let effect = Math.floor(Math.random() * 10); //for random effect
     if(effect > 5){
         //activate superball
-        superBall();
-    } else if(effect < 5){
-        //deactivate superball
+        //superBall();
+        paddleUp();
+    } 
+    
+}
+var paddleTimer;
+function paddleUp(){
+    if(!isPaddleUp){
+        isPaddleUp = true;
+        powerUp = "Paddle Up!"
+        paddleTimer = setTimeout(resetPaddle=>{
+            isPaddleUp = false;
+            powerUp = "";
+        },10000);
+    } else {
+        clearTimeout(paddleTimer);
+        paddleTimer = setTimeout(resetPaddle=>{
+            isPaddleUp = false;
+            powerUp = "";
+        },3000);
     }
 }
 
+var superBallTimer;
 function superBall(){
     if(!isSuperBall){
         isSuperBall = true;
         powerUp = "Super Ball!";
-        setTimeout(resetSuper=>{
+        superBallTimer = setTimeout(resetSuper=>{
             isSuperBall = false;
             powerUp = "";
         },7000);
-    } else {
-        clearTimeout();
-        setTimeout(resetSuper=>{
+    } else { //extends superball duration if triggered while active
+        clearTimeout(superBallTimer);
+        superBallTimer = setTimeout(resetSuper=>{
             isSuperBall = false;
             powerUp = "";
         },7000);
@@ -154,12 +175,24 @@ function collisionDetection(){ //detection for blocks
 function draw(){  //draw code here
     ctx.clearRect(0, 0, canvas.width, canvas.height); //clear frame before drawing
     drawBlocks(); //draws blocks
+
     if(isSuperBall){drawBall(Math.floor(Math.random()*16777215).toString(16));} 
-        else {drawBall(ballRandomColor);}  //draws ball
+        else drawBall(ballRandomColor);  //draws ball
+
+    if(isPaddleUp){ //keep increasing player width until target reached
+        if(playerWidth < playerUpWidth){
+            playerWidth += 1;
+        }
+    } else {
+        if(playerWidth != 75){
+            playerWidth--;
+        }
+    }
+
     drawPlayer(); //draws player
     drawScore(); //draws score
     drawLives(); //draws lives
-    drawPower(); //nest in if
+    drawPower(); //draws current powerup
 //--------------------ball collision detection---------------------------
     collisionDetection(); //for blocks
     if(x + dx > canvas.width - ballRadius || x + dx < ballRadius){
