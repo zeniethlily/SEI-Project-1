@@ -6,10 +6,12 @@ var interval;
 var gamePaused = false;
 
 var powerUp = "";
+var isPaddleUp = false;
 var currentScore = 0;
 var HiScore = 0;
 var playerHeight = 10;
 var playerWidth = 75;
+var playerUpWidth = 150;
 var playerX = (canvas.width - playerWidth) / 2; //X coordinate of player
 var player;
 var leftKey = false;
@@ -33,9 +35,10 @@ var ballLaunched = false;
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
 
+player = new PaddlePop(playerX, canvas.height - playerHeight, playerWidth, playerHeight);
+
 //all functions that need to be loaded at game start
 function init(){
-    player = new PaddlePop(playerX, canvas.height - playerHeight, playerWidth, playerHeight);
     balls = [];
     for(let c = 0; c < block.columns; c++){
         bricks[c] = [];
@@ -50,12 +53,22 @@ function draw(){
     if(!gamePaused){
         ctx.clearRect(0, 0, canvas.width, canvas.height); //clear frame before drawing
         //----player-------
+        if(isPaddleUp){ //keep increasing player width until target reached
+            if(player.width < playerUpWidth){
+                player.width ++;
+            }
+        } else {
+            if(player.width != 75){
+                player.width--;
+            }
+        }
         player.draw(); //draw and animate paddle
         player.move();
         drawScore();
         drawPower();
         drawLives();
         //----balls--------
+        superColor(Math.floor(Math.random()*16777215).toString(16));
         drawAllBalls(); //draw and animate balls
         moveAllBalls();
         removeBalls();
@@ -69,6 +82,7 @@ function draw(){
         if(noMoreBalls() && ballLaunched){
             if(player.lives == 0){
                 //gameover goes here
+                endScreen();
             } else {
                 player.lives--;
                 ballLaunched = false;
@@ -77,6 +91,66 @@ function draw(){
         }
     }
 
+}
+
+function effectRandomizer(){
+    let effect = Math.floor(Math.random() * 10); //for random effect
+    if(effect > 3 && effect < 7){
+        //activate superball
+        superBall();
+    }
+    if(effect >= 7 && effect < 10){
+        paddleUp();
+    }
+    
+}
+
+function superColor(color){
+    for(ball of balls){
+        if(ball.isSuperBall){
+            ball.color = `#${color}`;
+        } else {
+            ball.color = "#000000";
+        }
+    }
+}
+
+var superBallTimer;
+function superBall(){
+    for(ball of balls){
+        if(!ball.isSuperBall){
+            ball.isSuperBall = true;
+            powerUp = "Super Ball!";
+            superBallTimer = setTimeout(resetSuper=>{
+                ball.isSuperBall = false;
+                powerUp = "";
+            },7000);
+        } else { //extends superball duration if triggered while active
+            clearTimeout(superBallTimer);
+            superBallTimer = setTimeout(resetSuper=>{
+                ball.isSuperBall = false;
+                powerUp = "";
+            },3000);
+        }
+    }
+}
+
+var paddleTimer;
+function paddleUp(){
+    if(!isPaddleUp){
+        isPaddleUp = true;
+        powerUp = "Paddle Up!"
+        paddleTimer = setTimeout(resetPaddle=>{
+            isPaddleUp = false;
+            powerUp = "";
+        },10000);
+    } else {
+        clearTimeout(paddleTimer);
+        paddleTimer = setTimeout(resetPaddle=>{
+            isPaddleUp = false;
+            powerUp = "";
+        },3000);
+    }
 }
 
 function drawAllBalls(){
@@ -154,15 +228,15 @@ function collisionDetection(){ //detection for blocks
                             ball.dy = -ball.dy; //bounces the ball after collision.
                         }
                         b.state = 0; //set state of the block to 0 so it doesn't get drawn in next frame.
-                        /* playerScore += 12;
-                        ballColorChanger();
+                        currentScore += b.points;
+                        //ballColorChanger();
                         effectRandomizer();//testing random effects
-                        if(playerScore == (block.rows * block.columns * 12)){
-                            //gameover
-                            alert("Win!");
-                            document.location.reload();
-                            clearInterval(interval);
-                        } */
+                        // if(playerScore == (block.rows * block.columns * 12)){
+                        //     //gameover
+                        //     alert("Win!");
+                        //     document.location.reload();
+                        //     clearInterval(interval);
+                        // }
                     }
                 }
                 
@@ -228,11 +302,14 @@ function endScreen(){
     // Fill with gradient
     ctx.fillStyle = gradient;
     ctx.fillText("Game Over.", (canvas.width / 2) - 90, (canvas.height / 2) - 50);
+    currentScore = 0;//reset score and lives
+    player.lives = 3;
     pauseGame();
     resetBalls();
 }
 
 function resetBalls(){
+    ballLaunched = false;
     init();
 }
 
