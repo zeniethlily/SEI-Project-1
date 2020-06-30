@@ -216,6 +216,22 @@ function winScreen(){
     resetBalls();
 }
 
+function endScreen(){
+    clearInterval(interval);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.font = "30px Verdana";
+    // Create gradient
+    var gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
+    gradient.addColorStop("0"," magenta");
+    gradient.addColorStop("0.5", "blue");
+    gradient.addColorStop("1.0", "red");
+    // Fill with gradient
+    ctx.fillStyle = gradient;
+    ctx.fillText("Game Over.", (canvas.width / 2) - 90, (canvas.height / 2) - 50);
+    pauseGame();
+    resetBalls();
+}
+
 function resetBalls(){
     init();
 }

@@ -4,8 +4,8 @@ class Ball{
         this.y = y; //default position for ball
         this.radius = r;
         this.color = "#000000";
-        this.dx = 5;
-        this.dy = -5;
+        this.dx = 3;
+        this.dy = -3;
         this.exists = true;
         this.isSuperBall = false;
     }
