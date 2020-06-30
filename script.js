@@ -5,6 +5,9 @@ var interval;
 
 var gamePaused = false;
 
+var powerUp = "";
+var currentScore = 0;
+var HiScore = 0;
 var playerHeight = 10;
 var playerWidth = 75;
 var playerX = (canvas.width - playerWidth) / 2; //X coordinate of player
@@ -25,6 +28,7 @@ var bricks = [];
 
 var ballRadius = 10;
 var balls;
+var ballLaunched = false;
 
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
@@ -41,13 +45,16 @@ function init(){
     }
 }
 init();
-
+interval = setInterval(draw, 10);
 function draw(){
     if(!gamePaused){
         ctx.clearRect(0, 0, canvas.width, canvas.height); //clear frame before drawing
         //----player-------
         player.draw(); //draw and animate paddle
         player.move();
+        drawScore();
+        drawPower();
+        drawLives();
         //----balls--------
         drawAllBalls(); //draw and animate balls
         moveAllBalls();
@@ -59,7 +66,15 @@ function draw(){
             //win state - reset bricks and player while keeping high score
             winScreen();
         }
-        
+        if(noMoreBalls() && ballLaunched){
+            if(player.lives == 0){
+                //gameover goes here
+            } else {
+                player.lives--;
+                ballLaunched = false;
+                //allow one more ball to be launched
+            }
+        }
     }
 
 }
@@ -77,13 +92,42 @@ function moveAllBalls(){
 }
 
 function removeBalls(){
+        for(let i = 0; i < balls.length; i++){
+            if(!balls[i].exists){
+                console.log("ball removed "+ i);
+                balls.splice(i,1); //remove ball that doesn't exist
+            }
+        }
+}
+
+function noMoreBalls(){
+    let boole = true;
     for(let i = 0; i < balls.length; i++){
-        if(!balls[i].exists){
-            console.log("ball removed "+ i);
-            balls.splice(i,1); //remove ball that doesn't exist
+        if(balls[i].exists){
+            boole = false;
         }
     }
+    return boole;
 }
+
+function drawScore(){ //draws score on the canvas
+    ctx.font = "16px monospace";
+    ctx.fillStyle = "#000000";
+    ctx.fillText(`Score: ${currentScore}`, 8, 20); //number behind x,y on canvas
+}
+
+function drawPower(){ //draws score on the canvas
+    ctx.font = "16px monospace";
+    ctx.fillStyle = "#000000";
+    ctx.fillText(`${powerUp}`, (canvas.width / 2)-15, 20); //number behind x,y on canvas
+}
+
+function drawLives(){
+    ctx.font = "16px monospace";
+    ctx.fillStyle = "#000000";
+    ctx.fillText(`Lives: ${player.lives}`, canvas.width-95, 20); //drawn on the other side of the screen
+}
+
 
 function drawAllBricks(){
     for(let c = 0; c < block.columns; c++){

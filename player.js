@@ -29,6 +29,9 @@ class PaddlePop {
     }
 
     launch(){ //code to launch ball, will add validation to check total number.
-        balls.push(new Ball(this.x, this.y, ballRadius)); //this creates ball
+        if(!ballLaunched){
+            balls.push(new Ball(this.x, this.y, ballRadius)); //this creates ball
+            ballLaunched = true;
+        }
     }
 }
