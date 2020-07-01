@@ -4,7 +4,7 @@ class Ball{
         this.y = y; //default position for ball
         this.radius = r;
         this.color = "#000000";
-        this.dx = 3;
+        this.dx = 1;
         this.dy = -3;
         this.speed = 3;
         this.exists = true;
@@ -26,31 +26,33 @@ class Ball{
         if(this.y + this.dy < this.radius){
             this.dy = -this.dy; //collision detection with top of the box.
         } else if(this.y + this.dy > canvas.height - this.radius){
+            this.y = player.y - (this.radius*1.5);
+            this.dy = -this.dy;
             if(this.x > player.x && this.x < player.x + player.width){
                 if(this.x + this.radius > player.x && this.x + this.radius < player.x + 20){
                     //bounce left 45degrees
-                    this.dy = -this.dy;
+                    
                     this.dx = -this.speed;
                     console.log("left45");
                 }
                 if(this.x + this.radius > player.x + (player.width/5) && this.x + this.radius < player.x + ((player.width/5)*2)){
                     //bounce left 60degrees
-                    this.dy = -this.speed;
+                    //this.dy = -this.dy;
                     this.dx = -this.speed * 0.6;
                     console.log("left60");
                 }
                 if(this.x > player.x + ((player.width/5)*2) && this.x + this.radius < player.x + ((player.width/5)*3)){ //collision detection with player bar center
-                    this.dy = -this.dy; 
+                    //this.dy = -this.dy; 
                 } 
                 if(this.x > player.x + ((player.width/5)*3) && this.x + this.radius < player.x + ((player.width/5)*4)){
                     //bounce right 60degrees
-                    this.dy = -this.dy;
+                    //this.dy = -this.dy;
                     this.dx = this.speed * 0.6;
                     console.log("right60");
                 }
                 if(this.x > player.x + ((player.width/5)*4) && this.x + this.radius < player.x + player.width){
                     //bounce right 45degrees
-                    this.dy = -this.dy;
+                    //this.dy = -this.dy;
                     this.dx = this.speed;
                     console.log("right45");
                 }

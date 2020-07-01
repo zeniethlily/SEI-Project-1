@@ -27,7 +27,8 @@ var block = {
     offsetLeft: 30
 }
 var bricks = [];
-
+var level = ['O####M','UO###M','UUO##M','UUUO#M','UUUUOM','UUUO#M','UUO##M','UO###M'];
+//['########','OOOOOOOO','OOOOOOOO','########','########']
 var ballRadius = 10;
 var balls;
 var ballLaunched = false;
@@ -46,9 +47,11 @@ function init(){
             bricks[c][r] = new Brick(0, 0, block.width, block.height); //initialize each brick
         }
     }
+    
 }
 init();
 interval = setInterval(draw, 10);
+
 function draw(){
     if(!gamePaused){
         ctx.clearRect(0, 0, canvas.width, canvas.height); //clear frame before drawing
@@ -206,7 +209,7 @@ function drawLives(){
 function drawAllBricks(){
     for(let c = 0; c < block.columns; c++){
         for(let r = 0; r < block.rows; r++){
-            if(bricks[c][r].state == 1){
+            if(bricks[c][r].state > 0){
                 var blockX = (c * (block.width + block.padding)) + block.offsetLeft;
                 var blockY = (r * (block.height + block.padding)) + block.offsetTop;
                 bricks[c][r].x = blockX;
@@ -222,12 +225,12 @@ function collisionDetection(){ //detection for blocks
         for(let c = 0; c < block.columns; c++){
             for(let r = 0; r < block.rows; r++){
                 var b = bricks[c][r]; //adding a reference to each of the existing blocks
-                if (b.state == 1){ //check if the block exists
+                if (b.state != 0){ //check if the block exists
                     if(ball.x > b.x && ball.x < b.x + block.width && ball.y > b.y && ball.y < b.y + block.height){
                         if(!ball.isSuperBall){
                             ball.dy = -ball.dy; //bounces the ball after collision.
                         }
-                        b.state = 0; //set state of the block to 0 so it doesn't get drawn in next frame.
+                        b.state -= 1; //set state of the block to 0 so it doesn't get drawn in next frame.
                         currentScore += b.points;
                         //ballColorChanger();
                         effectRandomizer();//testing random effects
@@ -249,7 +252,7 @@ function allBricksDed() {
     let bool = true;
     for(let c = 0; c < block.columns; c++){
         for(let r = 0; r < block.rows; r++){
-            if(bricks[c][r].state == 1){
+            if(bricks[c][r].state > 0){
                 bool = false;
             }
         }
@@ -347,3 +350,22 @@ function pauseGame(){
     }
     
 }
+
+function brickLoader(brickArr, c, r){ //broken. work in progress
+    var brickString = brickArr.join('');
+    for(let i = 0; i < brickString.length; i++){
+        if(brickString.charAt(i) == '#'){
+            bricks[c][r].state = 1;
+        }
+        if(brickString.charAt(i) == 'O'){
+            bricks[c][r].state = 0;
+        }
+        if(brickString.charAt(i) == 'U'){
+            bricks[c][r].state = 2;
+        }
+        if(brickString.charAt(i) == 'M'){
+            bricks[c][r].state = 3;
+        }
+    }
+}
+
