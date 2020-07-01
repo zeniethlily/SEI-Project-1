@@ -8,7 +8,8 @@ var gamePaused = false;
 var powerUp = "";
 var isPaddleUp = false;
 var currentScore = 0;
-var HiScore = 0;
+var roundsWon = 0;
+var hiScore = 0;
 var playerHeight = 10;
 var playerWidth = 75;
 var playerUpWidth = 150;
@@ -32,6 +33,15 @@ var level = ['O####M','UO###M','UUO##M','UUUO#M','UUUUOM','UUUO#M','UUO##M','UO#
 var ballRadius = 10;
 var balls;
 var ballLaunched = false;
+
+var roundsText = document.querySelector('.titleRight');
+var hiScoreDiv = document.querySelector('.titleLeft');
+var pee = document.createElement('p');
+var peePee = document.createElement('p');
+pee.textContent = 'Rounds Won: 0';
+peePee.textContent = 'Hi-Score: 0';
+roundsText.appendChild(pee);
+hiScoreDiv.appendChild(peePee);
 
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
@@ -98,11 +108,11 @@ function draw(){
 
 function effectRandomizer(){
     let effect = Math.floor(Math.random() * 10); //for random effect
-    if(effect > 3 && effect < 7){
+    if(effect > 5 && effect < 8){
         //activate superball
         superBall();
     }
-    if(effect >= 7 && effect < 10){
+    if(effect >= 8 && effect < 10){
         paddleUp();
     }
     
@@ -178,13 +188,12 @@ function removeBalls(){
 }
 
 function noMoreBalls(){
-    let boole = true;
     for(let i = 0; i < balls.length; i++){
         if(balls[i].exists){
-            boole = false;
+            return false;
         }
     }
-    return boole;
+    return true;
 }
 
 function drawScore(){ //draws score on the canvas
@@ -249,20 +258,14 @@ function collisionDetection(){ //detection for blocks
 }
 
 function allBricksDed() {
-    let bool = true;
     for(let c = 0; c < block.columns; c++){
         for(let r = 0; r < block.rows; r++){
             if(bricks[c][r].state > 0){
-                bool = false;
+                return false;
             }
         }
     }
-    /* for (let brick of bricks) {
-      if (brick.state == 1) {
-        bool = false;
-      }
-    } */
-    return bool;
+    return true;
   }
 
 function pauseScreen(){
@@ -274,7 +277,7 @@ function pauseScreen(){
     gradient.addColorStop("1.0", "red");
     // Fill with gradient
     ctx.fillStyle = gradient;
-    ctx.fillText("Game Paused", (canvas.width / 2) - 90, canvas.height / 2);
+    ctx.fillText("Press P to continue.", (canvas.width / 2) - 130, canvas.height / 2);
 }
 
 function winScreen(){
@@ -288,7 +291,10 @@ function winScreen(){
     gradient.addColorStop("1.0", "red");
     // Fill with gradient
     ctx.fillStyle = gradient;
-    ctx.fillText("You Win.", (canvas.width / 2) - 90, (canvas.height / 2) - 50);
+    ctx.fillText("Round Cleared.", (canvas.width / 2) - 80, (canvas.height / 2) - 50);
+    roundsWon += 1;
+    pee.textContent = `Rounds Won: ${roundsWon}`;
+    updateHiScore();
     pauseGame();
     resetBalls();
 }
@@ -305,10 +311,14 @@ function endScreen(){
     // Fill with gradient
     ctx.fillStyle = gradient;
     ctx.fillText("Game Over.", (canvas.width / 2) - 90, (canvas.height / 2) - 50);
+    updateHiScore();
     currentScore = 0;//reset score and lives
+    roundsWon = 0;
     player.lives = 3;
+    pee.textContent = `Rounds Won: ${roundsWon}`;
     pauseGame();
     resetBalls();
+    
 }
 
 function resetBalls(){
@@ -351,7 +361,13 @@ function pauseGame(){
     
 }
 
-function brickLoader(brickArr, c, r){ //broken. work in progress
+function updateHiScore(){
+    if(hiScore < currentScore){
+        hiScore = currentScore;
+        peePee.textContent = `Hi-Score: ${hiScore}`;
+    }
+}
+/* function brickLoader(brickArr, c, r){ //broken. work in progress
     var brickString = brickArr.join('');
     for(let i = 0; i < brickString.length; i++){
         if(brickString.charAt(i) == '#'){
@@ -367,5 +383,5 @@ function brickLoader(brickArr, c, r){ //broken. work in progress
             bricks[c][r].state = 3;
         }
     }
-}
+} */
 

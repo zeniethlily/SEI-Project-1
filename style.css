@@ -1,17 +1,36 @@
 canvas {
-    background: #eee; 
+    background: #eee;
+    border-radius: 20px;
 }
 
 * {
-    padding: 0; margin: 0; 
+    padding: 0; margin: 0;
+    font-family: monospace;
 }
 
-h1{
+h1 {
     text-align: center;
 }
 
+.flex-contain {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    justify-content: center;   
+}
+.titleRight {
+    padding-top: 12px;
+    margin-left: 75px;
+    
+}
+.titleLeft {
+    padding-top: 12px;
+    margin-left: 80px;
+    text-align: center;
+}
 .canvasDiv{
-    padding-top: 20px;
-    text-align: center;
+    padding-top: 10px;
+    display: flex;
+    justify-content: center;
+
 }
 
