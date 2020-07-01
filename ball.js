@@ -39,7 +39,7 @@ class Ball{
                     this.dx = -this.speed * 0.6;
                     console.log("left60");
                 }
-                if(this.x >= player.x + ((player.width/5)*2) && this.x + this.radius <= player.x + ((player.width/5)*3)){ //collision detection with player bar
+                if(this.x > player.x + ((player.width/5)*2) && this.x + this.radius < player.x + ((player.width/5)*3)){ //collision detection with player bar center
                     this.dy = -this.dy; 
                 } 
                 if(this.x > player.x + ((player.width/5)*3) && this.x + this.radius < player.x + ((player.width/5)*4)){
