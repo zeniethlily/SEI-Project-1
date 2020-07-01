@@ -6,6 +6,7 @@ class Ball{
         this.color = "#000000";
         this.dx = 3;
         this.dy = -3;
+        this.speed = 3;
         this.exists = true;
         this.isSuperBall = false;
     }
@@ -25,28 +26,43 @@ class Ball{
         if(this.y + this.dy < this.radius){
             this.dy = -this.dy; //collision detection with top of the box.
         } else if(this.y + this.dy > canvas.height - this.radius){
-            if(this.x > player.x && this.x < player.x + player.width){ //collision detection with player bar
-                this.dy = -this.dy;
+            if(this.x > player.x && this.x < player.x + player.width){
+                if(this.x + this.radius > player.x && this.x + this.radius < player.x + 20){
+                    //bounce left 45degrees
+                    this.dy = -this.dy;
+                    this.dx = -this.speed;
+                    console.log("left45");
+                }
+                if(this.x + this.radius > player.x + (player.width/5) && this.x + this.radius < player.x + ((player.width/5)*2)){
+                    //bounce left 60degrees
+                    this.dy = -this.speed;
+                    this.dx = -this.speed * 0.6;
+                    console.log("left60");
+                }
+                if(this.x >= player.x + ((player.width/5)*2) && this.x + this.radius <= player.x + ((player.width/5)*3)){ //collision detection with player bar
+                    this.dy = -this.dy; 
+                } 
+                if(this.x > player.x + ((player.width/5)*3) && this.x + this.radius < player.x + ((player.width/5)*4)){
+                    //bounce right 60degrees
+                    this.dy = -this.dy;
+                    this.dx = this.speed * 0.6;
+                    console.log("right60");
+                }
+                if(this.x > player.x + ((player.width/5)*4) && this.x + this.radius < player.x + player.width){
+                    //bounce right 45degrees
+                    this.dy = -this.dy;
+                    this.dx = this.speed;
+                    console.log("right45");
+                }
             } else {
-                    console.log("bottom-out detected");
-                    this.exists = false; //remove ball from existence
-                //deprecated from ver1. end state to be tracked seperately.
-                //game end state because ball touches bottom bar. can add lives here.
-                /* playerLives--;
-                if(!playerLives){
-                    alert("Game Over!");
-                    document.location.reload();
-                    clearInterval(interval);
-                } else {
-                    x = canvas.width / 2;
-                    y = canvas.height - 30;
-                    dx = 2;
-                    dy = -2;
-                    playerPos = (canvas.width - playerWidth) / 2;
-                } */
+                console.log("bottom-out detected");
+                this.exists = false; //remove ball from existence
+            //deprecated from ver1. end state to be tracked seperately.
+            //game end state because ball touches bottom bar. can add lives here.
             }
         }
         this.x += this.dx;
         this.y += this.dy;
-    }
+    } 
 }
+

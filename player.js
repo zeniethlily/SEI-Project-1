@@ -6,6 +6,7 @@ class PaddlePop {
         this.height = h;
         this.lives = 3;
         this.color = "#000000";
+        this.speed = 5;
     }
 
     draw(){
@@ -18,10 +19,10 @@ class PaddlePop {
 
     move(){ //collision detection code
         if(leftKey && this.x > 0){ //collision detection for player otherwise it keeps clipping into box
-            this.x -= 7; //player movement speed left
+            this.x -= this.speed; //player movement speed left
             
         } else if(rightKey && this.x < canvas.width - this.width){ 
-            this.x += 7;  //player movement speed right
+            this.x += this.speed;  //player movement speed right
             if (this.x + this.width > canvas.width){
                 this.x = canvas.width - this.width;
             }
