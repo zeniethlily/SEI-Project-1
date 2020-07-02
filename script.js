@@ -30,7 +30,7 @@ var block = {
     offsetLeft: 30
 }
 var bricks = [];
-var level = ['O####M','UO###M','UUO##M','UUUO#M','UUUUOM','UUUO#M','UUO##M','UO###M'];
+//var level = ['O####M','UO###M','UUO##M','UUUO#M','UUUUOM','UUUO#M','UUO##M','UO###M'];
 //['########','OOOOOOOO','OOOOOOOO','########','########']
 var ballRadius = 10;
 var balls;

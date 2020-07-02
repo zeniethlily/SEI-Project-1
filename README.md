@@ -29,7 +29,7 @@ To implement this game, I used :
 
 Working on loading unique levels by setting the state of the blocks during the initialisation phase. Ran into some issues with the arrays used.
 
-*RARE* bug - ball sometimes clips through the paddle at very specific problems.
+*RARE* bug - ball sometimes clips through the paddle at very specific locations.
 
 ### Game Link
 
