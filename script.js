@@ -96,7 +96,7 @@ function draw(){
             winScreen();
         }
         if(noMoreBalls() && ballLaunched){
-            if(player.lives == 0){
+            if(player.lives == 1){
                 //gameover goes here
                 endScreen();
             } else {
@@ -399,7 +399,7 @@ function pauseGame(){
 
 function updateHiScore(){
     if(hiScore < currentScore){
-        hiScore = currentScore;
+        hiScore += currentScore;
         peePee.textContent = `Hi-Score: ${hiScore}`;
     }
 }
