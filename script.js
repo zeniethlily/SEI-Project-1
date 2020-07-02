@@ -8,6 +8,7 @@ var gamePaused = false;
 
 var powerUp = "";
 var isPaddleUp = false;
+var isMultiBall = false;
 var currentScore = 0;
 var roundsWon = 0;
 var hiScore = 0;
@@ -34,6 +35,7 @@ var level = ['O####M','UO###M','UUO##M','UUUO#M','UUUUOM','UUUO#M','UUO##M','UO#
 var ballRadius = 10;
 var balls;
 var ballLaunched = false;
+var ballsFired = 0;
 
 var roundsText = document.querySelector('.titleRight');
 var hiScoreDiv = document.querySelector('.titleLeft');
@@ -116,6 +118,9 @@ function effectRandomizer(){
     if(effect >= 8 && effect < 10){
         paddleUp();
     }
+    if(effect > 3 && effect <= 5){
+        multiBall();
+    }
     
 }
 
@@ -163,6 +168,27 @@ function paddleUp(){
         paddleTimer = setTimeout(resetPaddle=>{
             isPaddleUp = false;
             powerUp = "";
+        },3000);
+    }
+}
+
+var multiBallTimer;
+function multiBall(){
+    if(!isMultiBall){
+        isMultiBall = true;
+        powerUp = "Multi Ball!"
+        multiBallTimer = setTimeout(resetPaddle=>{
+            isMultiBall = false;
+            powerUp = "";
+            ballsFired = 0;
+        },10000);
+    } else {
+        clearTimeout(multiBallTimer);
+        ballsFired = 0;
+        multiBallTimer = setTimeout(resetPaddle=>{
+            isMultiBall = false;
+            powerUp = "";
+            ballsFired = 0;
         },3000);
     }
 }
@@ -227,6 +253,15 @@ function drawAllBricks(){
                 bricks[c][r].draw();
             }
         }
+    }
+}
+
+function ballsLaunchedChecker(){
+    if(ballsFired < 5){
+        ballsFired++;
+        return true;
+    } else {
+        return false;
     }
 }
 
